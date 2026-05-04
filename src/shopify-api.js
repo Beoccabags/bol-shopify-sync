@@ -1,17 +1,59 @@
 const axios = require('axios');
 
 class ShopifyApi {
-  constructor(shop, accessToken) {
+  constructor(shop, clientId, clientSecret) {
     this.shop = shop;
-    this.accessToken = accessToken;
+    this.clientId = clientId;
+    this.clientSecret = clientSecret;
+    this.accessToken = null;
+    this.tokenExpiry = null;
     this.apiVersion = '2024-10';
     this.endpoint = `https://${shop}.myshopify.com/admin/api/${this.apiVersion}/graphql.json`;
+  }
+
+  /**
+   * Authenticate met Shopify OAuth2 client credentials flow
+   */
+  async authenticate() {
+    // Check of we al een geldig token hebben (token is 24 uur geldig, we refreshen 1 uur eerder)
+    if (this.accessToken && this.tokenExpiry && Date.now() < this.tokenExpiry) {
+      return this.accessToken;
+    }
+
+    try {
+      const response = await axios.post(
+        `https://${this.shop}.myshopify.com/admin/oauth/access_token`,
+        new URLSearchParams({
+          grant_type: 'client_credentials',
+          client_id: this.clientId,
+          client_secret: this.clientSecret
+        }),
+        {
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+          }
+        }
+      );
+
+      this.accessToken = response.data.access_token;
+      // Token is 24 uur geldig, we refreshen 1 uur eerder
+      const expiresIn = response.data.expires_in || 86400; // 24 uur in seconden
+      this.tokenExpiry = Date.now() + (expiresIn - 3600) * 1000;
+
+      console.log('[Shopify] Authenticatie succesvol');
+      return this.accessToken;
+    } catch (error) {
+      console.error('[Shopify] Authenticatie mislukt:', error.response?.data || error.message);
+      throw new Error('Shopify authenticatie mislukt');
+    }
   }
 
   /**
    * Voer een GraphQL query uit
    */
   async graphql(query, variables = {}) {
+    await this.authenticate();
+
     try {
       const response = await axios.post(
         this.endpoint,
@@ -47,7 +89,6 @@ class ShopifyApi {
             id
             firstName
             lastName
-            email
             addresses {
               id
               address1
@@ -85,7 +126,6 @@ class ShopifyApi {
             id
             firstName
             lastName
-            email
             addresses {
               id
               address1
@@ -113,11 +153,6 @@ class ShopifyApi {
         countryCode: customerData.countryCode
       }]
     };
-
-    // Voeg email toe als beschikbaar
-    if (customerData.email) {
-      input.email = customerData.email;
-    }
 
     const data = await this.graphql(mutation, { input });
 
@@ -273,27 +308,37 @@ class ShopifyApi {
   }
 
   /**
-   * Check of een Bol order al bestaat in Shopify (via tag)
+   * Check of een Bol order al bestaat in Shopify (via metafield marketplace_bestelnummer)
    */
   async orderExistsByBolId(bolOrderId) {
     const query = `
-      query findOrderByTag($query: String!) {
-        orders(first: 1, query: $query) {
+      query findOrderByMetafield($query: String!) {
+        orders(first: 5, query: $query) {
           nodes {
             id
             name
+            metafield(namespace: "custom", key: "marketplace_bestelnummer") {
+              value
+            }
           }
         }
       }
     `;
 
-    // Zoek op tag met bol order ID
-    const searchQuery = `tag:"bol-${bolOrderId}"`;
+    // Zoek op metafield met bol order ID
+    const searchQuery = `metafields.custom.marketplace_bestelnummer:"${bolOrderId}"`;
     const data = await this.graphql(query, { query: searchQuery });
 
+    // Verifieer exacte match op metafield waarde (Shopify search kan false positives geven)
+    for (const order of data.orders.nodes) {
+      if (order.metafield && order.metafield.value === bolOrderId) {
+        console.log(`[Shopify] Order voor Bol ${bolOrderId} bestaat al: ${order.name}`);
+        return true;
+      }
+    }
+
     if (data.orders.nodes.length > 0) {
-      console.log(`[Shopify] Order voor Bol ${bolOrderId} bestaat al: ${data.orders.nodes[0].name}`);
-      return true;
+      console.log(`[Shopify] Zoekresultaten gevonden maar geen exacte match voor ${bolOrderId}, wordt als nieuw behandeld`);
     }
 
     return false;

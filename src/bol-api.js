@@ -71,6 +71,30 @@ class BolApi {
   }
 
   /**
+   * Maak een authenticated API request die raw data teruggeeft (voor CSV downloads)
+   */
+  async requestRaw(method, endpoint) {
+    await this.authenticate();
+
+    try {
+      const response = await axios({
+        method,
+        url: `${this.baseUrl}${endpoint}`,
+        headers: {
+          'Authorization': `Bearer ${this.accessToken}`,
+          'Accept': 'text/csv'
+        },
+        responseType: 'text'
+      });
+
+      return response.data;
+    } catch (error) {
+      console.error(`[Bol.com] API error (${endpoint}):`, error.response?.data || error.message);
+      throw error;
+    }
+  }
+
+  /**
    * Haal open FBR orders op
    * FBR = Fulfilled By Retailer (zelf verzenden)
    */

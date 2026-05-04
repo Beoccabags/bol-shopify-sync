@@ -1,15 +1,22 @@
-# Bol.com → Shopify Draft Orders Sync
+# Bol.com ↔ Shopify Sync
 
-Synchroniseert Bol.com orders automatisch naar Shopify draft orders.
+Synchroniseert Bol.com orders naar Shopify draft orders, en Shopify voorraad naar Bol.com.
 
 ## Features
 
+### Order Sync (Bol → Shopify)
 - Haalt open FBR orders op van Bol.com
 - Zoekt of maakt klanten aan in Shopify
 - Matcht producten op EAN/barcode
 - Handelt prijsverschillen af (duurder/goedkoper)
 - Voorkomt dubbele verwerking via order tracking
 - Voegt "bol" tag en marketplace bestelnummer toe
+
+### Stock Sync (Shopify → Bol)
+- Haalt voorraadniveaus uit Shopify
+- Synchroniseert naar Bol.com offers
+- Matcht producten op EAN/barcode
+- Rapporteert verschillen en fouten
 
 ## Setup
 
@@ -58,12 +65,25 @@ BOL_PRIJSVERSCHIL_VARIANT_ID=gid://shopify/ProductVariant/123456789
 ### 4. Uitvoeren
 
 ```bash
-# Eenmalig uitvoeren
+# Order sync (Bol → Shopify)
 npm start
 
-# Of direct
-node index.js
+# Stock sync (Shopify → Bol)
+npm run sync:stock
 ```
+
+### 5. Stock Sync Setup (éénmalig)
+
+De Bol.com API vereist speciale permissies voor het ophalen van offers. Als je API credentials deze niet hebben, moet je handmatig een offers export downloaden:
+
+1. Ga naar [Bol.com Verkopersaccount](https://partner.bol.com)
+2. Ga naar **Aanbod** > **Overzicht**
+3. Klik op **Exporteer** (rechtsboven)
+4. Download de CSV en sla op als: `data/bol-offers.csv`
+
+De CSV moet minimaal de kolommen `ean` en `offerId` bevatten. Zie `data/bol-offers.example.csv` voor het format.
+
+**Tip:** Update dit bestand regelmatig als je nieuwe producten toevoegt op Bol.com.
 
 ## Automatisch draaien (Cron)
 
@@ -114,14 +134,18 @@ Voeg toe (elke 15 minuten):
 
 ```
 bol-shopify-sync/
-├── index.js              # Entry point
+├── index.js              # Entry point order sync
+├── sync-stock.js         # Entry point stock sync
 ├── src/
 │   ├── bol-api.js        # Bol.com API wrapper
 │   ├── shopify-api.js    # Shopify GraphQL wrapper
 │   ├── order-tracker.js  # Tracking verwerkte orders
-│   └── sync.js           # Synchronisatie logica
+│   ├── sync.js           # Order synchronisatie logica
+│   └── stock-sync.js     # Stock synchronisatie logica
 ├── data/
-│   └── processed-orders.json  # Verwerkte order IDs
+│   ├── processed-orders.json  # Verwerkte order IDs
+│   ├── bol-offers.csv         # Bol offers mapping (handmatig)
+│   └── bol-offers.example.csv # Voorbeeld format
 ├── .env                  # Configuratie (niet in git)
 └── .env.example          # Configuratie template
 ```
@@ -139,3 +163,7 @@ bol-shopify-sync/
 ### "Draft order aanmaken mislukt"
 - Controleer of de Shopify Access Token de juiste scopes heeft
 - Controleer of BOL_PRIJSVERSCHIL_VARIANT_ID correct is geformatteerd
+
+## License
+
+MIT — see [LICENSE](LICENSE) for details.

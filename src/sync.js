@@ -42,7 +42,6 @@ async function findOrCreateCustomer(shopifyApi, shipmentDetails) {
   const newCustomer = await shopifyApi.createCustomer({
     firstName,
     lastName,
-    email: shipmentDetails.email || null,
     address1: addressData.address1,
     address2: addressData.address2,
     city: addressData.city,
@@ -75,20 +74,20 @@ async function processOrder(bolApi, shopifyApi, order) {
   let totalPrijsverschil = 0;
 
   for (const item of orderDetails.orderItems || []) {
-    // Bol.com API v10: EAN zit in product.ean, prijs in unitPrice of offerPrice
-    const ean = item.product?.ean || item.ean;
+    // Bol.com API v10: EAN uit interne referentie (offer.reference), prijs in unitPrice of offerPrice
+    const ean = item.offer?.reference;
     const bolPrice = parseFloat(item.unitPrice || item.offerPrice || 0);
     const quantity = item.quantity || 1;
 
-    console.log(`[Sync] Verwerken item: EAN ${ean}, prijs €${bolPrice}, aantal ${quantity}`);
+    console.log(`[Sync] Verwerken item: EAN ${ean} (via interne referentie), prijs €${bolPrice}, aantal ${quantity}`);
 
-    // Skip items zonder EAN
+    // Skip items zonder EAN/referentie
     if (!ean) {
-      console.log('[Sync] Item heeft geen EAN, structuur:', JSON.stringify(item, null, 2));
+      console.log('[Sync] Item heeft geen interne referentie (EAN), structuur:', JSON.stringify(item, null, 2));
       continue;
     }
 
-    // Zoek product op EAN
+    // Zoek product op EAN/barcode
     const variant = await shopifyApi.findProductByBarcode(ean);
 
     if (!variant) {
@@ -143,7 +142,8 @@ async function processOrder(bolApi, shopifyApi, order) {
   const draftOrderInput = {
     // Geen customerId - voorkomt dat Shopify e-mails stuurt
     lineItems: lineItems,
-    tags: ['bol', `bol-${orderId}`],
+    note: `Bol.com bestelnummer: ${orderId}`,
+    tags: ['bol'],
     shippingAddress: {
       firstName: shippingAddress.firstName,
       lastName: shippingAddress.lastName,

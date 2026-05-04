@@ -1,8 +1,9 @@
+#!/usr/bin/env node
 require('dotenv').config();
 
 const BolApi = require('./src/bol-api');
 const ShopifyApi = require('./src/shopify-api');
-const { syncOrders } = require('./src/sync');
+const StockSync = require('./src/stock-sync');
 
 /**
  * Valideer dat alle vereiste environment variables zijn ingesteld
@@ -30,8 +31,8 @@ function validateEnvironment() {
  * Main functie
  */
 async function main() {
-  console.log('Bol.com → Shopify Sync');
-  console.log('Versie 1.0.0\n');
+  console.log('Shopify → Bol.com Stock Sync');
+  console.log('============================\n');
 
   // Valideer environment
   validateEnvironment();
@@ -50,15 +51,22 @@ async function main() {
 
   try {
     // Start synchronisatie
-    const result = await syncOrders(bolApi, shopifyApi);
+    const stockSync = new StockSync(bolApi, shopifyApi);
+    const result = await stockSync.sync();
+
+    console.log('\nSync voltooid!');
 
     // Exit code gebaseerd op resultaat
     if (result.errors > 0) {
+      console.log(`Let op: ${result.errors} fouten opgetreden tijdens sync.`);
       process.exit(1);
     }
     process.exit(0);
   } catch (error) {
     console.error('\nFatale fout:', error.message);
+    if (process.env.DEBUG) {
+      console.error(error.stack);
+    }
     process.exit(1);
   }
 }

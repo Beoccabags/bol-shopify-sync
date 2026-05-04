@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "sync": "node index.js"
+    "sync": "node index.js",
+    "sync:stock": "node sync-stock.js"
   },
   "keywords": [
     "bol.com",
