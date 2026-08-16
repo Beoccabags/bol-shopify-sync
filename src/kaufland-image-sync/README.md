@@ -12,7 +12,7 @@ node fetch-units.js          # 52 units per storefront      -> units.json
 node fetch-eans.js           # id_offer -> EAN via /products -> offer-eans.json
 node push-kfl.js             # PATCH per EAN per taal        -> kfl-results.json
 node verify-kfl.js de de-DE  # update_status per EAN
-node pics-kfl.js de && python3 phash-kfl.py de   # controleert de hoofdafbeelding
+node verify-stored.js        # DE ECHTE CONTROLE: leest per taal terug wat is opgeslagen
 ```
 
 ## Account
@@ -39,9 +39,17 @@ gaat negen keer de deur uit.
 - **`locale` is verplicht** en `storefront` ook, óók op het status-endpoint
   `GET /product-data/status/{ean}`. Geldige locales staan in de foutmelding als
   je een onbestaande meegeeft.
-- **`SUCCESS` betekent niet dat de foto's al zichtbaar zijn.** Kaufland hert-host
-  de beelden en beoordeelt sommige wijzigingen handmatig; direct na de push wijst
-  `main_picture` nog naar het oude beeld. Verifieer later opnieuw.
+- **Controleer op `GET /product-data/{ean}`, niet op `main_picture`.** Dat
+  endpoint geeft terug wat Kaufland van jou heeft opgeslagen, inclusief de
+  volledige `picture`-lijst in volgorde — dat is de enige directe bevestiging
+  dat een push geland is. Het veld `main_picture` op `/products/{id}` is de
+  gepubliceerde catalogusfoto; die wordt asynchroon herbergd en liep hier na een
+  half uur nog volledig achter. Wie daarop verifieert concludeert ten onrechte
+  dat de push mislukt is (`pics-kfl.js`/`phash-kfl.py` meten dus publicatie,
+  niet inzending).
+- Het `attribute_values`-blok in de status toont alleen attributen die nog
+  beoordeeld of omgezet worden; `picture` staat er niet in, ook niet als het
+  goed is aangekomen.
 - **SKU-namen zijn niet betrouwbaar:** `TT-ZW-01` ("zwart") is in werkelijkheid
   de Miles Cognac. Koppel op de EAN uit `/products/{id_product}`, niet op de SKU.
 - `/products` is alleen-lezen en toont maar één `main_picture`; de volledige
