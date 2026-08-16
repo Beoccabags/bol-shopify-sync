@@ -18,6 +18,15 @@ Synchroniseert Bol.com orders naar Shopify draft orders, en Shopify voorraad naa
 - Matcht producten op EAN/barcode
 - Rapporteert verschillen en fouten
 
+### Afbeeldingen-sync (Shopify → marketplaces)
+- Zet de productfoto's uit Shopify per variant op **bol.com** (`src/image-sync/`)
+  en op **Amazon** DE/FR/NL/BE (`src/amazon-image-sync/`)
+- Koppelt foto's aan varianten op kleur, ook als Shopify maar één beeld per
+  variant koppelt
+- Labelt elke foto volgens bol's datamodel per productcategorie
+- Bouwt een visuele controlepagina om vóór het pushen na te lopen
+- Zie de README in beide mappen voor de werkwijze en de valkuilen
+
 ## Setup
 
 ### 1. Shopify Voorbereidingen
