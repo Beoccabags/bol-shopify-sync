@@ -20,7 +20,8 @@ Synchroniseert Bol.com orders naar Shopify draft orders, en Shopify voorraad naa
 
 ### Afbeeldingen-sync (Shopify → marketplaces)
 - Zet de productfoto's uit Shopify per variant op **bol.com** (`src/image-sync/`)
-  en op **Amazon** DE/FR/NL/BE (`src/amazon-image-sync/`)
+  op **Amazon** DE/FR/NL/BE (`src/amazon-image-sync/`) en op **Kaufland**
+  (9 storefronts, `src/kaufland-image-sync/`)
 - Koppelt foto's aan varianten op kleur, ook als Shopify maar één beeld per
   variant koppelt
 - Labelt elke foto volgens bol's datamodel per productcategorie

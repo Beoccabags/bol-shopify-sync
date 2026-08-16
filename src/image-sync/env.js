@@ -11,5 +11,5 @@ if (fs.existsSync(file)) {
     if (m) env[m[1]] = m[2].trim();
   }
 }
-for (const k of Object.keys(process.env)) if (/^(BOL|SHOPIFY|AMZ)_/.test(k)) env[k] = process.env[k];
+for (const k of Object.keys(process.env)) if (/^(BOL|SHOPIFY|AMZ|KAUFLAND)_/.test(k)) env[k] = process.env[k];
 module.exports = env;
