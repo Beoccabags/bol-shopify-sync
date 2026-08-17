@@ -16,11 +16,15 @@ node chunks.js           # bol-categorie (chunk) per EAN       -> ean-chunks.jso
 node assign-labels.js    # labelt elke foto per categorie       -> upload-plan.json
 node thumbs.js           # thumbnails voor de controlepagina    -> thumbs.json
 node build-page.js       # visuele controlepagina               -> fotocontrole.html
+python3 sheets.py        # contactvellen voor de kleurcontrole   -> sheet-N.png
 node push.js             # verstuurt naar bol                   -> push-results.json
 node verify.js           # process-status per inzending         -> verify-status.json
 node reports.js          # inhoudelijk upload-rapport           -> upload-reports.json
 ```
 Draai `build-page.js` en bekijk de pagina **voordat** je `push.js` draait.
+Draai daarnaast `sheets.py` en bekijk de contactvellen met de Read-tool: de kleurnaam in
+Shopify heeft eerder omgekeerd gestaan ten opzichte van het beeld, en dat is alleen
+visueel te vinden.
 
 ## Hoe foto's aan varianten worden gekoppeld
 Shopify koppelt maar één afbeelding per variant, dus de rest wordt afgeleid:
