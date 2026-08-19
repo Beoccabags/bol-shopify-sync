@@ -28,3 +28,7 @@ src/*/bol-*.json
 src/*/bol-offers.csv
 src/*/fotocontrole.html
 src/*/sheet-*.png
+
+# logs en lokale sync-state
+*.log
+processed-orders.json

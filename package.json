@@ -1,17 +1,22 @@
 {
   "name": "bol-shopify-sync",
-  "version": "1.0.0",
-  "description": "Synchroniseer Bol.com orders naar Shopify draft orders",
+  "version": "1.1.0",
+  "description": "Synchroniseer Bol.com orders naar Shopify, en voorraad + verzendingen van Shopify naar Bol.com",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "sync": "node index.js",
-    "sync:stock": "node sync-stock.js"
+    "sync": "node index.js orders",
+    "sync:stock": "node sync-stock.js",
+    "sync:tracking": "node index.js tracking",
+    "sync:all": "node index.js all",
+    "test": "node --test test/*.test.js"
   },
   "keywords": [
     "bol.com",
     "shopify",
     "orders",
+    "voorraad",
+    "tracking",
     "sync"
   ],
   "author": "",

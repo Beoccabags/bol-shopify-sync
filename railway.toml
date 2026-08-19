@@ -2,7 +2,9 @@
 builder = "nixpacks"
 
 [deploy]
-startCommand = "node index.js"
+# "all" draait de ordersync + verzendsync elk kwartier en de voorraadsync
+# één keer per dag (in het uur uit STOCK_SYNC_HOUR).
+startCommand = "node index.js all"
 restartPolicyType = "never"
 
 [cron]

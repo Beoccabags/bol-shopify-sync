@@ -1,5 +1,12 @@
 const axios = require('axios');
 
+/**
+ * Wacht een aantal milliseconden
+ */
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 class ShopifyApi {
   constructor(shop, clientId, clientSecret) {
     this.shop = shop;
@@ -50,31 +57,59 @@ class ShopifyApi {
 
   /**
    * Voer een GraphQL query uit
+   *
+   * Bij THROTTLED (rate limit) wordt automatisch opnieuw geprobeerd.
    */
-  async graphql(query, variables = {}) {
+  async graphql(query, variables = {}, retries = 3) {
     await this.authenticate();
 
-    try {
-      const response = await axios.post(
-        this.endpoint,
-        { query, variables },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            'X-Shopify-Access-Token': this.accessToken
+    let attempt = 0;
+
+    while (true) {
+      try {
+        const response = await axios.post(
+          this.endpoint,
+          { query, variables },
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              'X-Shopify-Access-Token': this.accessToken
+            }
           }
+        );
+
+        if (response.data.errors) {
+          const throttled = response.data.errors.some(e => e.extensions?.code === 'THROTTLED');
+
+          if (throttled && attempt < retries) {
+            attempt++;
+            const waitMs = attempt * 2000;
+            console.warn(`[Shopify] Rate limit bereikt, poging ${attempt}/${retries} over ${waitMs}ms`);
+            await sleep(waitMs);
+            continue;
+          }
+
+          console.error('[Shopify] GraphQL errors:', JSON.stringify(response.data.errors, null, 2));
+          throw new Error(`GraphQL errors: ${response.data.errors.map(e => e.message).join(', ')}`);
         }
-      );
 
-      if (response.data.errors) {
-        console.error('[Shopify] GraphQL errors:', JSON.stringify(response.data.errors, null, 2));
-        throw new Error(`GraphQL errors: ${response.data.errors.map(e => e.message).join(', ')}`);
+        return response.data.data;
+      } catch (error) {
+        const status = error.response?.status;
+
+        if ((status === 429 || (status >= 500 && status < 600)) && attempt < retries) {
+          attempt++;
+          const waitMs = attempt * 2000;
+          console.warn(`[Shopify] HTTP ${status}, poging ${attempt}/${retries} over ${waitMs}ms`);
+          await sleep(waitMs);
+          continue;
+        }
+
+        if (error.response) {
+          console.error('[Shopify] API error:', error.response.data || error.message);
+        }
+        throw error;
       }
-
-      return response.data.data;
-    } catch (error) {
-      console.error('[Shopify] API error:', error.response?.data || error.message);
-      throw error;
     }
   }
 
@@ -342,6 +377,232 @@ class ShopifyApi {
     }
 
     return false;
+  }
+
+  /**
+   * Haal alle varianten met een barcode (EAN) en hun beschikbare voorraad op.
+   *
+   * Zonder locationId wordt de totale voorraad over alle locaties gebruikt,
+   * met locationId de beschikbare voorraad op die ene locatie.
+   *
+   * @returns {Map<string, object>} barcode -> { available, variantId, title, tracked, status }
+   */
+  async getVariantsForStock({ locationId = null, pageSize = 100 } = {}) {
+    const inventoryLevelFields = locationId
+      ? `
+          inventoryLevel(locationId: $locationId) {
+            quantities(names: ["available"]) {
+              name
+              quantity
+            }
+          }`
+      : '';
+
+    const query = `
+      query stockVariants($cursor: String${locationId ? ', $locationId: ID!' : ''}) {
+        productVariants(first: ${pageSize}, after: $cursor) {
+          pageInfo {
+            hasNextPage
+            endCursor
+          }
+          nodes {
+            id
+            barcode
+            sku
+            title
+            inventoryQuantity
+            inventoryItem {
+              id
+              tracked${inventoryLevelFields}
+            }
+            product {
+              id
+              title
+              status
+            }
+          }
+        }
+      }
+    `;
+
+    const byBarcode = new Map();
+    let cursor = null;
+    let page = 0;
+    let total = 0;
+
+    do {
+      const variables = { cursor };
+      if (locationId) variables.locationId = locationId;
+
+      const data = await this.graphql(query, variables);
+      const connection = data.productVariants;
+      page++;
+
+      for (const variant of connection.nodes) {
+        total++;
+
+        const barcode = (variant.barcode || '').trim();
+        if (!barcode) continue;
+
+        let available;
+        if (locationId) {
+          const level = variant.inventoryItem?.inventoryLevel;
+          const quantity = level?.quantities?.find(q => q.name === 'available');
+          // Product niet voorradig op deze locatie -> 0
+          available = quantity ? quantity.quantity : 0;
+        } else {
+          available = variant.inventoryQuantity ?? 0;
+        }
+
+        const entry = {
+          variantId: variant.id,
+          sku: variant.sku,
+          title: variant.product?.title || variant.title,
+          productStatus: variant.product?.status,
+          tracked: variant.inventoryItem?.tracked !== false,
+          available
+        };
+
+        // Meerdere varianten met dezelfde EAN: tel de voorraad bij elkaar op
+        const existing = byBarcode.get(barcode);
+        if (existing) {
+          existing.available += available;
+        } else {
+          byBarcode.set(barcode, entry);
+        }
+      }
+
+      cursor = connection.pageInfo.hasNextPage ? connection.pageInfo.endCursor : null;
+
+      // Kleine pauze om de rate limit te ontzien
+      if (cursor) await sleep(200);
+    } while (cursor);
+
+    console.log(`[Shopify] ${total} variant(en) opgehaald in ${page} pagina('s), ${byBarcode.size} met barcode`);
+    return byBarcode;
+  }
+
+  /**
+   * Zoek Shopify orders die naar Bol.com gemeld moeten worden:
+   * orders met de bol-tag die (deels) zijn afgehandeld en nog niet gemeld zijn.
+   */
+  async findOrdersToShip({ bolTag = 'bol', shippedTag = 'bol-verzonden', sinceIso = null, maxOrders = 250 } = {}) {
+    const query = `
+      query ordersToShip($cursor: String, $search: String!) {
+        orders(first: 25, after: $cursor, query: $search, sortKey: UPDATED_AT) {
+          pageInfo {
+            hasNextPage
+            endCursor
+          }
+          nodes {
+            id
+            name
+            note
+            updatedAt
+            displayFulfillmentStatus
+            metafield(namespace: "custom", key: "marketplace_bestelnummer") {
+              value
+            }
+          }
+        }
+      }
+    `;
+
+    const filters = [
+      `tag:'${bolTag}'`,
+      `-tag:'${shippedTag}'`,
+      '(fulfillment_status:shipped OR fulfillment_status:partial)'
+    ];
+
+    if (sinceIso) {
+      filters.push(`updated_at:>='${sinceIso}'`);
+    }
+
+    const search = filters.join(' AND ');
+    const orders = [];
+    let cursor = null;
+
+    do {
+      const data = await this.graphql(query, { cursor, search });
+      const connection = data.orders;
+
+      orders.push(...connection.nodes);
+
+      cursor = connection.pageInfo.hasNextPage ? connection.pageInfo.endCursor : null;
+      if (cursor) await sleep(200);
+    } while (cursor && orders.length < maxOrders);
+
+    console.log(`[Shopify] ${orders.length} afgehandelde bol-order(s) gevonden om te melden`);
+    return orders;
+  }
+
+  /**
+   * Haal de fulfillments van een order op, inclusief trackinggegevens en
+   * de regels per product (met barcode/EAN voor matching op productniveau).
+   */
+  async getOrderFulfillments(orderId) {
+    const query = `
+      query orderFulfillments($id: ID!) {
+        order(id: $id) {
+          id
+          name
+          fulfillments(first: 10) {
+            id
+            status
+            createdAt
+            trackingInfo(first: 5) {
+              number
+              company
+              url
+            }
+            fulfillmentLineItems(first: 50) {
+              nodes {
+                id
+                quantity
+                lineItem {
+                  id
+                  name
+                  sku
+                  variant {
+                    id
+                    barcode
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    `;
+
+    const data = await this.graphql(query, { id: orderId });
+    return data.order?.fulfillments || [];
+  }
+
+  /**
+   * Voeg tags toe aan een order
+   */
+  async addOrderTags(orderId, tags) {
+    const mutation = `
+      mutation addTags($id: ID!, $tags: [String!]!) {
+        tagsAdd(id: $id, tags: $tags) {
+          userErrors {
+            field
+            message
+          }
+        }
+      }
+    `;
+
+    const data = await this.graphql(mutation, { id: orderId, tags });
+
+    if (data.tagsAdd.userErrors.length > 0) {
+      const errors = data.tagsAdd.userErrors;
+      console.error('[Shopify] Tag toevoegen mislukt:', errors);
+      throw new Error(`Tag toevoegen mislukt: ${errors.map(e => e.message).join(', ')}`);
+    }
+
+    return true;
   }
 }
 
