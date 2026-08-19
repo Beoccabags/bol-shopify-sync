@@ -6,6 +6,7 @@ const { syncOrders } = require('./src/sync');
 const { syncStock } = require('./src/stock-sync');
 const { syncTracking } = require('./src/tracking-sync');
 const dailyState = require('./src/daily-state');
+const { rotateLogs } = require('./src/log-rotate');
 
 const TASKS = ['orders', 'stock', 'tracking', 'all'];
 
@@ -76,6 +77,9 @@ function isStockDue() {
  */
 async function main() {
   const task = resolveTask();
+
+  // Logbestand per dag archiveren en oude archieven opruimen
+  rotateLogs();
 
   console.log('Bol.com <-> Shopify Sync');
   console.log(`Versie 1.1.0 — taak: ${task}\n`);

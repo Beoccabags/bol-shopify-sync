@@ -139,6 +139,10 @@ launchctl bootout gui/$UID/com.svendijk.bol-shopify-sync    # uitzetten
 launchctl bootstrap gui/$UID ~/Library/LaunchAgents/com.svendijk.bol-shopify-sync.plist  # aanzetten
 ```
 
+Het logbestand wordt bij elke run gecontroleerd: is `sync.log` van een vorige
+dag, dan verhuist hij naar `logs/sync-JJJJ-MM-DD.log`. Archieven ouder dan 30
+dagen worden opgeruimd (instelbaar met `LOG_RETENTION_DAYS`).
+
 Let op: een launchd-agent draait in de gebruikerssessie. Na een herstart van de
 Mac start de sync pas zodra er is ingelogd. Met FileVault aan is dat niet te
 omzeilen — de schijf moet eerst met een wachtwoord ontgrendeld worden.
@@ -248,7 +252,8 @@ bol-shopify-sync/
 │   ├── stock-sync.js       # Voorraadsync Shopify -> Bol.com
 │   ├── tracking-sync.js    # Verzendsync Shopify -> Bol.com
 │   ├── transporters.js     # Vervoerder -> Bol.com transporter code
-│   └── daily-state.js      # Houdt bij wat er vandaag al gedraaid heeft
+│   ├── daily-state.js      # Houdt bij wat er vandaag al gedraaid heeft
+│   └── log-rotate.js       # Dagelijkse logrotatie met bewaartermijn
 ├── sync-stock.js           # Losse entrypoint voor de voorraadsync
 ├── src/image-sync/         # Foto's van Shopify naar bol.com
 ├── src/amazon-image-sync/  # Foto's naar Amazon DE/FR/NL/BE
@@ -256,6 +261,8 @@ bol-shopify-sync/
 ├── test/                   # Unit tests van de matching-logica
 ├── processed-orders.json   # Verwerkte order IDs (lokaal)
 ├── daily-state.json        # Wanneer de voorraadsync voor het laatst draaide
+├── sync.log                # Log van vandaag
+├── logs/                   # Gearchiveerde logs (30 dagen)
 ├── .env                    # Configuratie (niet in git)
 └── .env.example            # Configuratie template
 ```

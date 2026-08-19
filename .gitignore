@@ -35,3 +35,6 @@ processed-orders.json
 
 # lokale dagstate
 daily-state.json
+
+# gearchiveerde logs
+logs/
