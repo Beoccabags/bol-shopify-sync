@@ -5,6 +5,7 @@ const ShopifyApi = require('./src/shopify-api');
 const { syncOrders } = require('./src/sync');
 const { syncStock } = require('./src/stock-sync');
 const { syncTracking } = require('./src/tracking-sync');
+const dailyState = require('./src/daily-state');
 
 const TASKS = ['orders', 'stock', 'tracking', 'all'];
 
@@ -45,13 +46,29 @@ function resolveTask() {
 }
 
 /**
- * Draait de voorraadsync in de "all" modus maar één keer per dag: alleen in
- * het ingestelde uur. Zo kan alles met één cron-schema (elk kwartier) draaien.
+ * Bepaalt of de voorraadsync in de "all" modus moet draaien.
+ *
+ * De sync draait één keer per dag, vanaf het ingestelde uur. Er wordt
+ * bijgehouden op welke dag hij voor het laatst gedraaid heeft, zodat het niet
+ * uitmaakt hoe vaak dit script wordt aangeroepen — en zodat een gemiste dag
+ * (machine uit) alsnog ingehaald wordt.
+ *
+ * Kan de datum niet worden opgeslagen (bijvoorbeeld op een read-only
+ * filesystem), dan valt hij terug op een venster van een kwartier.
  */
-function isStockWindow() {
+function isStockDue() {
   const hour = parseInt(process.env.STOCK_SYNC_HOUR || '6', 10);
   const now = new Date();
-  return now.getHours() === hour && now.getMinutes() < 15;
+
+  if (now.getHours() < hour) {
+    return false;
+  }
+
+  if (dailyState.ranToday('stock', now)) {
+    return false;
+  }
+
+  return true;
 }
 
 /**
@@ -91,10 +108,14 @@ async function main() {
       errors += result.errors;
     }
 
-    // Shopify voorraad -> Bol.com (in "all" alleen in het ingestelde uur)
-    if (task === 'stock' || (task === 'all' && isStockWindow())) {
+    // Shopify voorraad -> Bol.com (in "all" één keer per dag)
+    if (task === 'stock' || (task === 'all' && isStockDue())) {
       const result = await syncStock(bolApi, shopifyApi);
       errors += result.errors;
+
+      if (task === 'all') {
+        dailyState.markRanToday('stock');
+      }
     }
 
     process.exit(errors > 0 ? 1 : 0);

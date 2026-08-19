@@ -121,15 +121,34 @@ naar Bol.com wordt gestuurd.
 
 ## Automatisch draaien
 
-### Railway (huidige opzet)
+### Mac mini (huidige opzet)
 
-`railway.toml` draait elk kwartier `node index.js all`. Daarin zit:
+De sync draait als launchd-agent, elke 5 minuten:
 
-- ordersync en verzendsync: elke run
-- voorraadsync: alleen als het uur gelijk is aan `STOCK_SYNC_HOUR` (standaard 6)
+```
+~/Library/LaunchAgents/com.svendijk.bol-shopify-sync.plist
+  -> node index.js all   (StartInterval 300, RunAtLoad true)
+```
 
-Railway draait in UTC. Zet `TZ=Europe/Amsterdam` als environment variable als je
-`STOCK_SYNC_HOUR` in Nederlandse tijd wilt opgeven.
+Handige commando's:
+
+```bash
+launchctl list | grep bol-shopify          # draait hij? (tweede kolom = laatste exit code)
+tail -f sync.log                           # live meekijken
+launchctl bootout gui/$UID/com.svendijk.bol-shopify-sync    # uitzetten
+launchctl bootstrap gui/$UID ~/Library/LaunchAgents/com.svendijk.bol-shopify-sync.plist  # aanzetten
+```
+
+Let op: een launchd-agent draait in de gebruikerssessie. Na een herstart van de
+Mac start de sync pas zodra er is ingelogd. Met FileVault aan is dat niet te
+omzeilen — de schijf moet eerst met een wachtwoord ontgrendeld worden.
+
+### Railway
+
+`railway.toml` draait elk kwartier `node index.js all`. Railway draait in UTC;
+zet `TZ=Europe/Amsterdam` als je `STOCK_SYNC_HOUR` in Nederlandse tijd wilt
+opgeven. Draai de sync op één plek tegelijk — Railway én de Mac mini samen
+verwerken dezelfde Bol.com orders dubbel.
 
 Wil je liever aparte schema's? Maak dan twee Railway services op dezelfde repo:
 
@@ -147,6 +166,16 @@ crontab -e
 ```
 */15 * * * * cd /pad/naar/bol-shopify-sync && /usr/local/bin/node index.js all >> /var/log/bol-sync.log 2>&1
 ```
+
+### Wanneer draait de voorraadsync?
+
+In de taak `all` draait de voorraadsync één keer per dag, vanaf het uur uit
+`STOCK_SYNC_HOUR` (standaard 6). In `daily-state.json` wordt bijgehouden op welke
+dag hij voor het laatst gedraaid heeft, dus het maakt niet uit hoe vaak het
+script wordt aangeroepen. Stond de machine om 6 uur uit, dan wordt de sync
+ingehaald zodra hij weer draait.
+
+Nu meteen draaien kan altijd met `npm run sync:stock`.
 
 ## Werking
 
@@ -218,13 +247,15 @@ bol-shopify-sync/
 │   ├── sync.js             # Ordersync Bol.com -> Shopify
 │   ├── stock-sync.js       # Voorraadsync Shopify -> Bol.com
 │   ├── tracking-sync.js    # Verzendsync Shopify -> Bol.com
-│   └── transporters.js     # Vervoerder -> Bol.com transporter code
+│   ├── transporters.js     # Vervoerder -> Bol.com transporter code
+│   └── daily-state.js      # Houdt bij wat er vandaag al gedraaid heeft
 ├── sync-stock.js           # Losse entrypoint voor de voorraadsync
 ├── src/image-sync/         # Foto's van Shopify naar bol.com
 ├── src/amazon-image-sync/  # Foto's naar Amazon DE/FR/NL/BE
 ├── src/kaufland-image-sync/# Foto's naar Kaufland
 ├── test/                   # Unit tests van de matching-logica
 ├── processed-orders.json   # Verwerkte order IDs (lokaal)
+├── daily-state.json        # Wanneer de voorraadsync voor het laatst draaide
 ├── .env                    # Configuratie (niet in git)
 └── .env.example            # Configuratie template
 ```

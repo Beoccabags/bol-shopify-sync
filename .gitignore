@@ -32,3 +32,6 @@ src/*/sheet-*.png
 # logs en lokale sync-state
 *.log
 processed-orders.json
+
+# lokale dagstate
+daily-state.json
