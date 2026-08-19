@@ -136,13 +136,16 @@ async function processOrder(bolApi, shopifyApi, order) {
     });
   }
 
-  // Bouw draft order input (zonder customerId om e-mails te voorkomen)
+  // Zoek of maak klant aan in Shopify
+  const customer = await findOrCreateCustomer(shopifyApi, orderDetails.shipmentDetails);
+
+  // Bouw draft order input
   const shippingAddress = convertAddress(orderDetails.shipmentDetails);
 
   const draftOrderInput = {
-    // Geen customerId - voorkomt dat Shopify e-mails stuurt
+    customerId: customer.id,
     lineItems: lineItems,
-    note: `Bol.com bestelnummer: ${orderId}`,
+    note: orderId,
     tags: ['bol'],
     shippingAddress: {
       firstName: shippingAddress.firstName,
@@ -186,12 +189,18 @@ async function processOrder(bolApi, shopifyApi, order) {
   // Zet draft om naar echte order
   const shopifyOrder = await shopifyApi.completeDraftOrder(draftOrder.id);
 
-  // Markeer als betaald
-  await shopifyApi.markOrderAsPaid(shopifyOrder.id);
+  // Probeer als betaald te markeren (mag falen, order is al aangemaakt)
+  try {
+    await shopifyApi.markOrderAsPaid(shopifyOrder.id);
+    console.log(`[Sync] Order ${orderId} succesvol verwerkt als ${shopifyOrder.name} (betaald)`);
+  } catch (error) {
+    console.log(`[Sync] Order ${orderId} succesvol verwerkt als ${shopifyOrder.name} (betaald markeren niet mogelijk: ${error.message})`);
+  }
 
-  console.log(`[Sync] Order ${orderId} succesvol verwerkt als ${shopifyOrder.name} (betaald)`);
   return shopifyOrder;
 }
+
+const orderTracker = require('./order-tracker');
 
 /**
  * Hoofdfunctie: synchroniseer alle open Bol.com orders naar Shopify
@@ -217,10 +226,19 @@ async function syncOrders(bolApi, shopifyApi) {
   for (const order of orders) {
     const orderId = order.orderId;
 
-    // Check of order al bestaat in Shopify
+    // Check #1: Lokale tracker (betrouwbaarst)
+    if (orderTracker.isOrderProcessed(orderId)) {
+      console.log(`[Sync] Order ${orderId} al verwerkt (lokale tracker), overslaan`);
+      skipped++;
+      continue;
+    }
+
+    // Check #2: Check of order al bestaat in Shopify
     const exists = await shopifyApi.orderExistsByBolId(orderId);
     if (exists) {
       console.log(`[Sync] Order ${orderId} bestaat al in Shopify, overslaan`);
+      // Markeer ook in lokale tracker voor volgende keer
+      orderTracker.markOrderAsProcessed(orderId);
       skipped++;
       continue;
     }
@@ -229,6 +247,8 @@ async function syncOrders(bolApi, shopifyApi) {
       const result = await processOrder(bolApi, shopifyApi, order);
 
       if (result) {
+        // Markeer als succesvol verwerkt
+        orderTracker.markOrderAsProcessed(orderId);
         processed++;
       } else {
         errors++;
@@ -244,7 +264,15 @@ async function syncOrders(bolApi, shopifyApi) {
 
   console.log('\n' + '='.repeat(50));
   console.log('[Sync] Synchronisatie voltooid');
-  console.log(`[Sync] Verwerkt: ${processed}, Overgeslagen: ${skipped}, Fouten: ${errors}`);
+  console.log(`[Sync] Verwerkt: ${processed}, Overgeslagen: ${skipped}, Foout: ${errors}`);
+  
+  // Toon tracker statistieken
+  const stats = orderTracker.getStats();
+  console.log(`[Tracker] Totaal verwerkte orders: ${stats.totalProcessed}`);
+  if (stats.lastUpdated) {
+    console.log(`[Tracker] Laatste update: ${stats.lastUpdated}`);
+  }
+  
   console.log('='.repeat(50));
 
   return { processed, skipped, errors };
