@@ -1,0 +1,626 @@
+{
+  "8721398221519": {
+    "product": "Rugzak Cleo | 14\"",
+    "variant": "Glad zwart",
+    "nl": {
+      "state": "SUCCESS",
+      "entityId": "01a101be-8723-7b86-befe-e7e2ebf131a0"
+    },
+    "fr": {
+      "state": "SUCCESS",
+      "entityId": "01a101be-8d34-76b4-ad57-3104d4e096e5"
+    }
+  },
+  "7440853174146": {
+    "product": "Rugzak Cleo | 14\"",
+    "variant": "Suede Zwart",
+    "nl": {
+      "state": "SUCCESS",
+      "entityId": "01a101cc-965b-7beb-a4e9-8e33317074e3"
+    },
+    "fr": {
+      "state": "SUCCESS",
+      "entityId": "01a101cc-b5e3-766f-87de-815c5704d57f"
+    }
+  },
+  "8721398221021": {
+    "product": "Rugzak Mavis | 15,6\"",
+    "variant": "Cognac",
+    "nl": {
+      "state": "SUCCESS",
+      "entityId": "01a101cc-bbf4-7bab-95a3-9678b23d0484"
+    },
+    "fr": {
+      "state": "SUCCESS",
+      "entityId": "01a101cc-c1ff-7dfe-b7c1-7a319234e80f"
+    }
+  },
+  "8721398221014": {
+    "product": "Rugzak Mavis | 15,6\"",
+    "variant": "Zwart",
+    "nl": {
+      "state": "SUCCESS",
+      "entityId": "01a101cc-c80a-7dcc-b340-604a1d968398"
+    },
+    "fr": {
+      "state": "SUCCESS",
+      "entityId": "01a101cc-ce16-7e49-ad4f-608a4713409e"
+    }
+  },
+  "8721398221496": {
+    "product": "Rugzak Mavis | 15,6\"",
+    "variant": "Groen",
+    "nl": {
+      "state": "SUCCESS",
+      "entityId": "01a101cc-dc86-733f-85f6-216f2ce2a3e4"
+    },
+    "fr": {
+      "state": "SUCCESS",
+      "entityId": "01a101cc-e290-7958-8348-23ff7becded9"
+    }
+  },
+  "8721398221489": {
+    "product": "Rugzak Lorne cognac",
+    "variant": "Cognac",
+    "nl": {
+      "state": "SUCCESS",
+      "entityId": "01a101cc-e894-7aa3-84c1-32a593fa4997"
+    },
+    "fr": {
+      "state": "SUCCESS",
+      "entityId": "01a101cc-eea2-7353-bc1e-651eac26050f"
+    }
+  },
+  "8721398221465": {
+    "product": "Portemonnee Yarra",
+    "variant": "Cognac",
+    "nl": {
+      "state": "SUCCESS",
+      "entityId": "01a101cc-f4b0-7e7c-923e-01cbc8947e90"
+    },
+    "fr": {
+      "state": "SUCCESS",
+      "entityId": "01a101cc-fb89-7312-98d8-b15ae27df95a"
+    }
+  },
+  "8721398221472": {
+    "product": "Portemonnee Yarra",
+    "variant": "Antraciet",
+    "nl": {
+      "state": "SUCCESS",
+      "entityId": "01a101cd-0193-7e69-9b54-cb99269e015f"
+    },
+    "fr": {
+      "state": "SUCCESS",
+      "entityId": "01a101cd-0797-77f2-b1e5-ac83cfaf1fbc"
+    }
+  },
+  "8721398221441": {
+    "product": "Kaarthouder Argyle",
+    "variant": "Bruin",
+    "nl": {
+      "state": "SUCCESS",
+      "entityId": "01a101cd-0d9c-7465-b4f9-be4cc80e58a4"
+    },
+    "fr": {
+      "state": "SUCCESS",
+      "entityId": "01a101cd-13a1-74e5-9a9b-04ced98e27df"
+    }
+  },
+  "8721398221458": {
+    "product": "Kaarthouder Argyle",
+    "variant": "Antraciet",
+    "nl": {
+      "state": "SUCCESS",
+      "entityId": "01a101cd-27d0-7cf9-810c-5c053c3b13ea"
+    },
+    "fr": {
+      "state": "SUCCESS",
+      "entityId": "01a101cd-2dd3-7f29-af3e-d56d6a8a4695"
+    }
+  },
+  "8721398221007": {
+    "product": "Leren Rugzak Bryce | 17\"",
+    "variant": "Cognac",
+    "nl": {
+      "state": "SUCCESS",
+      "entityId": "01a101cd-33df-76c0-a298-a45c9ea53f4b"
+    },
+    "fr": {
+      "state": "SUCCESS",
+      "entityId": "01a101cd-39eb-77eb-9db6-e79c4cd12529"
+    }
+  },
+  "8721398221076": {
+    "product": "Leren Rugzak Bryce | 17\"",
+    "variant": "Zwart",
+    "nl": {
+      "state": "SUCCESS",
+      "entityId": "01a101cd-3ff6-7a30-8119-bcca3bc86689"
+    },
+    "fr": {
+      "state": "SUCCESS",
+      "entityId": "01a101cd-4e78-7a92-b3ad-ef26fe21c7a8"
+    }
+  },
+  "8721398221427": {
+    "product": "Leren Rugzak Finn - 17\"",
+    "variant": "Groen",
+    "nl": {
+      "state": "SUCCESS",
+      "entityId": "01a101cd-547e-7cc5-b34d-23e8972fdb77"
+    },
+    "fr": {
+      "state": "SUCCESS",
+      "entityId": "01a101cd-5a85-7903-a95b-f4c6bd1ef73e"
+    }
+  },
+  "8721398221434": {
+    "product": "Leren Rugzak Finn - 17\"",
+    "variant": "Zwart",
+    "nl": {
+      "state": "SUCCESS",
+      "entityId": "01a101cd-608c-73db-ba46-ebbfcfc20e38"
+    },
+    "fr": {
+      "state": "SUCCESS",
+      "entityId": "01a101cd-6693-7aa1-abc9-b2bb9375f24f"
+    }
+  },
+  "8721398221410": {
+    "product": "Rugzak Lilith Zwart",
+    "variant": "Zwart",
+    "nl": {
+      "state": "SUCCESS",
+      "entityId": "01a10260-b0d4-7070-8b5e-eac0b1261d78"
+    },
+    "fr": {
+      "state": "SUCCESS",
+      "entityId": "01a10260-b712-7daa-a553-1ef18fb520d5"
+    }
+  },
+  "8721398221366": {
+    "product": "Weekendtas Milo leer",
+    "variant": "Groen",
+    "nl": {
+      "state": "SUCCESS",
+      "entityId": "01a10260-bd21-771d-8a0b-ce7f8bb039b4"
+    },
+    "fr": {
+      "state": "SUCCESS",
+      "entityId": "01a10260-c354-7cae-ad85-b8af249a01fc"
+    }
+  },
+  "8721398221373": {
+    "product": "Weekendtas Milo leer",
+    "variant": "Cognac",
+    "nl": {
+      "state": "SUCCESS",
+      "entityId": "01a10260-c983-7c88-b510-2ecbc03bb594"
+    },
+    "fr": {
+      "state": "SUCCESS",
+      "entityId": "01a10260-cfa1-7329-9f13-23abad6c80e1"
+    }
+  },
+  "8721398221397": {
+    "product": "Schoudertas Ivy - iPad compatible",
+    "variant": "Zwart",
+    "nl": {
+      "state": "SUCCESS",
+      "entityId": "01a10260-d5ac-7a2a-b934-3e9c5e75fa34"
+    },
+    "fr": {
+      "state": "SUCCESS",
+      "entityId": "01a10260-dbc5-7b34-a871-68cd6bdf1724"
+    }
+  },
+  "8721398221403": {
+    "product": "Schoudertas Ivy - iPad compatible",
+    "variant": "Cognac",
+    "nl": {
+      "state": "SUCCESS",
+      "entityId": "01a10260-e1e6-7f80-888f-da928fcf2897"
+    },
+    "fr": {
+      "state": "SUCCESS",
+      "entityId": "01a10260-e807-73c3-abbf-6344ea3a41c6"
+    }
+  },
+  "8721398221380": {
+    "product": "Leren Schoudertas Niba",
+    "variant": "Groen",
+    "nl": {
+      "state": "SUCCESS",
+      "entityId": "01a10260-ee0d-7c23-a91c-54c1c82a745d"
+    },
+    "fr": {
+      "state": "SUCCESS",
+      "entityId": "01a10260-f411-79db-8f3f-ab0513fbfc80"
+    }
+  },
+  "8721398221038": {
+    "product": "Leren Schoudertas Niba",
+    "variant": "Cognac",
+    "nl": {
+      "state": "SUCCESS",
+      "entityId": "01a10260-fa19-7c1f-b69e-05569e170473"
+    },
+    "fr": {
+      "state": "SUCCESS",
+      "entityId": "01a10261-001b-77a8-9c91-2fb618f6d553"
+    }
+  },
+  "8721398221335": {
+    "product": "Leren schoudertas Maia",
+    "variant": "Zwart",
+    "nl": {
+      "state": "SUCCESS",
+      "entityId": "01a10261-0628-7a15-a7ba-db50c5da560c"
+    },
+    "fr": {
+      "state": "SUCCESS",
+      "entityId": "01a10261-0c4f-76d4-b722-c6fc4d0d2470"
+    }
+  },
+  "8721398221342": {
+    "product": "Leren schoudertas Maia",
+    "variant": "Beige",
+    "nl": {
+      "state": "SUCCESS",
+      "entityId": "01a10261-1272-772e-8150-8e3c5db2ee5f"
+    },
+    "fr": {
+      "state": "SUCCESS",
+      "entityId": "01a10261-1893-74c2-a037-cb59b7f7bf51"
+    }
+  },
+  "8721398221359": {
+    "product": "Leren schoudertas Maia",
+    "variant": "Donkerbruin",
+    "nl": {
+      "state": "SUCCESS",
+      "entityId": "01a10261-1e96-78ad-a58a-de3153596104"
+    },
+    "fr": {
+      "state": "SUCCESS",
+      "entityId": "01a10261-2498-7610-9cd5-ba2faa3b1c2b"
+    }
+  },
+  "8721398221304": {
+    "product": "Leren schoudertas Fei",
+    "variant": "Zwart",
+    "nl": {
+      "state": "SUCCESS",
+      "entityId": "01a10261-2b02-72a5-ab46-fcb7a9e02eda"
+    },
+    "fr": {
+      "state": "SUCCESS",
+      "entityId": "01a10261-312a-74f3-8a1e-f79dc7ad9a62"
+    }
+  },
+  "8721398221311": {
+    "product": "Leren schoudertas Fei",
+    "variant": "Beige",
+    "nl": {
+      "state": "SUCCESS",
+      "entityId": "01a10261-374b-781f-915b-879d6c0fe214"
+    },
+    "fr": {
+      "state": "SUCCESS",
+      "entityId": "01a10261-3d73-74df-b2f2-9e1602b9cc2d"
+    }
+  },
+  "8721398221328": {
+    "product": "Leren schoudertas Fei",
+    "variant": "Donkerbruin",
+    "nl": {
+      "state": "SUCCESS",
+      "entityId": "01a10261-4395-7f1c-8694-6cf59a971547"
+    },
+    "fr": {
+      "state": "SUCCESS",
+      "entityId": "01a10261-49bc-787e-be5c-61727dbd2541"
+    }
+  },
+  "8721398221274": {
+    "product": "Leren mid-size handtas Beau",
+    "variant": "Zwart",
+    "nl": {
+      "state": "SUCCESS",
+      "entityId": "01a10261-4fe2-7d06-a3ff-4178cb622d7e"
+    },
+    "fr": {
+      "state": "SUCCESS",
+      "entityId": "01a10261-5605-7524-bf68-54e0ae1656d5"
+    }
+  },
+  "8721398221281": {
+    "product": "Leren mid-size handtas Beau",
+    "variant": "Beige",
+    "nl": {
+      "state": "SUCCESS",
+      "entityId": "01a10261-5c29-76b9-9336-8fc8664d5fac"
+    },
+    "fr": {
+      "state": "SUCCESS",
+      "entityId": "01a10261-624e-7570-91a2-df2ed3a43268"
+    }
+  },
+  "8721398221298": {
+    "product": "Leren mid-size handtas Beau",
+    "variant": "Donkerbruin",
+    "nl": {
+      "state": "SUCCESS",
+      "entityId": "01a10261-6874-7a12-a5f5-872d29e19882"
+    },
+    "fr": {
+      "state": "SUCCESS",
+      "entityId": "01a10261-6e9c-7e26-a16b-cf93124caa3d"
+    }
+  },
+  "8721398221267": {
+    "product": "Leren shopper Mira",
+    "variant": "Zwart",
+    "nl": {
+      "state": "SUCCESS",
+      "entityId": "01a10261-74c2-78ae-8b76-ebed8b795d60"
+    },
+    "fr": {
+      "state": "SUCCESS",
+      "entityId": "01a10261-7ae3-77db-af20-7084d1e900d6"
+    }
+  },
+  "8721398221243": {
+    "product": "Leren shopper Mira",
+    "variant": "Donkerbruin",
+    "nl": {
+      "state": "SUCCESS",
+      "entityId": "01a10261-8106-7652-8236-0784f8533291"
+    },
+    "fr": {
+      "state": "SUCCESS",
+      "entityId": "01a10261-872d-7fa6-85ac-acffe71ce42a"
+    }
+  },
+  "8721398221250": {
+    "product": "Leren shopper Mira",
+    "variant": "Suede Zwart",
+    "nl": {
+      "state": "SUCCESS",
+      "entityId": "01a10261-8d55-739c-8152-6402e90e7143"
+    },
+    "fr": {
+      "state": "SUCCESS",
+      "entityId": "01a10261-9374-745d-93af-c47631a4a39f"
+    }
+  },
+  "8721398221229": {
+    "product": "Leren laptoptas Mason 15\"",
+    "variant": "Cognac",
+    "nl": {
+      "state": "SUCCESS",
+      "entityId": "01a10261-999c-7b0c-b58c-6612911265c5"
+    },
+    "fr": {
+      "state": "SUCCESS",
+      "entityId": "01a10261-a085-7bab-9cf9-861d1247d6ff"
+    }
+  },
+  "8721398221236": {
+    "product": "Leren laptoptas Mason 15\"",
+    "variant": "Bruin",
+    "nl": {
+      "state": "SUCCESS",
+      "entityId": "01a10261-a6aa-7ebd-a3e8-70610a433dfd"
+    },
+    "fr": {
+      "state": "SUCCESS",
+      "entityId": "01a10261-acb5-7cc7-99ef-95d5835827b0"
+    }
+  },
+  "8721398221205": {
+    "product": "Leren toilettas Miles",
+    "variant": "Cognac",
+    "nl": {
+      "state": "SUCCESS",
+      "entityId": "01a10261-b2bd-798a-b11b-732f2cf9cc0d"
+    },
+    "fr": {
+      "state": "SUCCESS",
+      "entityId": "01a10261-b9e9-7e0e-9c94-426b56bcdf85"
+    }
+  },
+  "8721398221212": {
+    "product": "Leren toilettas Miles",
+    "variant": "Bruin",
+    "nl": {
+      "state": "SUCCESS",
+      "entityId": "01a10261-c00d-78b4-9cf0-fd4a281daec5"
+    },
+    "fr": {
+      "state": "SUCCESS",
+      "entityId": "01a10261-c630-70e9-a7f1-e29e35447f31"
+    }
+  },
+  "8721398221182": {
+    "product": "Leren pasjeshouder Seth",
+    "variant": "Zwart",
+    "nl": {
+      "state": "SUCCESS",
+      "entityId": "01a10261-cc59-7178-8e20-4e1c025f625e"
+    },
+    "fr": {
+      "state": "SUCCESS",
+      "entityId": "01a10261-d283-78c4-a76e-498dd3649de3"
+    }
+  },
+  "8721398221175": {
+    "product": "Leren pasjeshouder Seth",
+    "variant": "Beige",
+    "nl": {
+      "state": "SUCCESS",
+      "entityId": "01a10261-d9b7-71e9-9745-397897d8dd6f"
+    },
+    "fr": {
+      "state": "SUCCESS",
+      "entityId": "01a10261-dfc3-740d-a1a7-bf17611402e9"
+    }
+  },
+  "8721398221199": {
+    "product": "Leren pasjeshouder Seth",
+    "variant": "Donkerbruin",
+    "nl": {
+      "state": "SUCCESS",
+      "entityId": "01a10261-e5ce-72fa-a518-192a69988a6f"
+    },
+    "fr": {
+      "state": "SUCCESS",
+      "entityId": "01a10261-ebd9-7658-be79-00871b89b1ff"
+    }
+  },
+  "8721398221144": {
+    "product": "Leren Portemonnee Aris",
+    "variant": "Zwart",
+    "nl": {
+      "state": "SUCCESS",
+      "entityId": "01a10261-f245-7af0-93fe-ad717ef9bb3a"
+    },
+    "fr": {
+      "state": "SUCCESS",
+      "entityId": "01a10261-f873-7dd9-89da-86eb9e0c1a81"
+    }
+  },
+  "8721398221151": {
+    "product": "Leren Portemonnee Aris",
+    "variant": "Beige",
+    "nl": {
+      "state": "SUCCESS",
+      "entityId": "01a10261-fe93-7817-bd3c-ac52167abe05"
+    },
+    "fr": {
+      "state": "SUCCESS",
+      "entityId": "01a10262-04b7-7b79-bfdc-64d8d878e6a7"
+    }
+  },
+  "8721398221168": {
+    "product": "Leren Portemonnee Aris",
+    "variant": "Bruin",
+    "nl": {
+      "state": "SUCCESS",
+      "entityId": "01a10262-0ae6-7c76-8491-b915badcf281"
+    },
+    "fr": {
+      "state": "SUCCESS",
+      "entityId": "01a10262-1107-7d08-8e00-36bcdc22ad99"
+    }
+  },
+  "8721398221113": {
+    "product": "Leren heren riem Oden",
+    "variant": "Bruin / 95cm",
+    "nl": {
+      "state": "SUCCESS",
+      "entityId": "01a10262-1723-77d1-893e-b0fd12d8fadb"
+    },
+    "fr": {
+      "state": "SUCCESS",
+      "entityId": "01a10262-1d4b-7268-9423-3586d8c076c4"
+    }
+  },
+  "8721398221137": {
+    "product": "Leren heren riem Oden",
+    "variant": "Bruin / 100cm",
+    "nl": {
+      "state": "SUCCESS",
+      "entityId": "01a10262-236e-7610-b589-05aff0c1aae3"
+    },
+    "fr": {
+      "state": "SUCCESS",
+      "entityId": "01a10262-2993-7177-bcb2-34801e619f0d"
+    }
+  },
+  "8721398221120": {
+    "product": "Leren heren riem Oden",
+    "variant": "Bruin / 105cm",
+    "nl": {
+      "state": "SUCCESS",
+      "entityId": "01a10262-2fbc-7e90-9b3a-5250077aa217"
+    },
+    "fr": {
+      "state": "SUCCESS",
+      "entityId": "01a10262-35df-7d2f-92aa-ea91e89d1c5d"
+    }
+  },
+  "8721398221083": {
+    "product": "Leren heren riem Oden",
+    "variant": "Cognac / 95cm",
+    "nl": {
+      "state": "SUCCESS",
+      "entityId": "01a10262-3c00-7d51-8fc2-6f909e1b295b"
+    },
+    "fr": {
+      "state": "SUCCESS",
+      "entityId": "01a10262-4229-732e-8aa7-a11ec2df27fb"
+    }
+  },
+  "8721398221106": {
+    "product": "Leren heren riem Oden",
+    "variant": "Cognac / 100cm",
+    "nl": {
+      "state": "SUCCESS",
+      "entityId": "01a10262-484e-7fa4-b639-d836eccef6f2"
+    },
+    "fr": {
+      "state": "SUCCESS",
+      "entityId": "01a10262-4e74-75ed-bcb0-f8069c008b68"
+    }
+  },
+  "8721398221090": {
+    "product": "Leren heren riem Oden",
+    "variant": "Cognac / 105cm",
+    "nl": {
+      "state": "SUCCESS",
+      "entityId": "01a10262-5497-7eba-981d-0d0f437c2122"
+    },
+    "fr": {
+      "state": "SUCCESS",
+      "entityId": "01a10262-5abf-7383-b5a5-33345101a9f5"
+    }
+  },
+  "8721398221045": {
+    "product": "Leren schoudertas Lua",
+    "variant": "Zwart",
+    "nl": {
+      "state": "SUCCESS",
+      "entityId": "01a10262-60e1-7d3a-8e5f-e0b0a69a2e96"
+    },
+    "fr": {
+      "state": "SUCCESS",
+      "entityId": "01a10262-6706-72a8-b79d-6e6c46bdbcc9"
+    }
+  },
+  "8721398221069": {
+    "product": "Leren schoudertas Lua",
+    "variant": "Beige",
+    "nl": {
+      "state": "SUCCESS",
+      "entityId": "01a10262-6d2d-7b85-8f44-a6e9e1aed509"
+    },
+    "fr": {
+      "state": "SUCCESS",
+      "entityId": "01a10262-7351-7e54-be6a-8491ab583c39"
+    }
+  },
+  "8721398221052": {
+    "product": "Leren schoudertas Lua",
+    "variant": "Donkerbruin",
+    "nl": {
+      "state": "SUCCESS",
+      "entityId": "01a10262-7972-7474-9c01-a63e6ecce4c0"
+    },
+    "fr": {
+      "state": "SUCCESS",
+      "entityId": "01a10262-7f9d-744b-a837-f637016daaf8"
+    }
+  }
+}

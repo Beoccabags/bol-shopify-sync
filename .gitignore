@@ -38,3 +38,13 @@ daily-state.json
 
 # gearchiveerde logs
 logs/
+
+# content-sync: ruwe dumps en beelden niet, de backup en het resultaat van de run wél
+src/content-sync/shopify-full.json
+src/content-sync/dump-*.txt
+src/content-sync/imgcheck/
+src/content-sync/bol-content-review.html
+!src/content-sync/bol-content-current.json
+!src/content-sync/push-results.json
+!src/content-sync/verify-status.json
+!src/content-sync/upload-reports.json
