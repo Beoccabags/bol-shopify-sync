@@ -48,3 +48,4 @@ src/content-sync/bol-content-review.html
 !src/content-sync/push-results.json
 !src/content-sync/verify-status.json
 !src/content-sync/upload-reports.json
+!src/content-sync/bol-content-after.json

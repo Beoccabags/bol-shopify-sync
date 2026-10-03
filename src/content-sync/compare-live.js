@@ -7,6 +7,9 @@ const OUT = __dirname + '/bol-content-after.json';
 const after = fs.existsSync(OUT) && !process.argv.includes('--fresh') ? JSON.parse(fs.readFileSync(OUT, 'utf8')) : {};
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const g = (c, id) => { const a = (c.attributes || []).find(x => x.id === id); return a ? a.values.map(v => v.value).join('; ') : null; };
+// bol normaliseert HTML en witruimte in de beschrijving en schrijft getallen als 3.50: vergelijk op tekst resp. waarde.
+const text = s => String(s || '').replace(/<[^>]+>/g, ' ').replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&#39;|&apos;/g, "'").replace(/&quot;/g, '"').replace(/\s+/g, ' ').trim();
+const num = s => String(s || '').split('; ').map(x => (isNaN(x) || x === '' ? x : String(Number(x)))).join('; ');
 (async () => {
   for (const ean of Object.keys(plan)) {
     after[ean] ||= {};
@@ -29,13 +32,13 @@ const g = (c, id) => { const a = (c.attributes || []).find(x => x.id === id); re
     for (const lang of ['nl', 'fr']) {
       const live = after[ean][lang] || {}; const want = id => p[lang].attributes.find(x => x.id === id).values.map(v => v.value).join('; ');
       if (g(live, 'Title') === want('Name')) okTitle++; else bad.push(`${ean} ${lang} TITEL live: ${g(live, 'Title')}`);
-      if (g(live, 'Description') === want('Description')) okDesc++; else bad.push(`${ean} ${lang} BESCHRIJVING wijkt af`);
+      if (text(g(live, 'Description')) === text(want('Description'))) okDesc++; else bad.push(`${ean} ${lang} BESCHRIJVING wijkt af`);
       if ((g(live, 'Colour') || '').toLowerCase() === want('Colour').toLowerCase()) okCol++; else bad.push(`${ean} ${lang} KLEUR live: ${g(live, 'Colour')}`);
     }
     for (const id of Object.keys(p.oldFix)) {
       nFix++; const want = p.nl.attributes.find(x => x.id === id).values.map(v => v.value).join('; ');
       const live = g(after[ean].nl || {}, id);
-      if (live !== null && live.replace(/\.0$/, '') === want.replace(/\.0$/, '')) okFix++; else bad.push(`${ean} nl ATTRIBUUT ${id} live: ${live} (gewild: ${want})`);
+      if (live !== null && num(live) === num(want)) okFix++; else bad.push(`${ean} nl ATTRIBUUT ${id} live: ${live} (gewild: ${want})`);
     }
   }
   const n = Object.keys(plan).length * 2;
